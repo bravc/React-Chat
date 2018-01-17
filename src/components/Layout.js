@@ -6,7 +6,7 @@ import '../css/index.css';
 import Login from './Login';
 import {USER_CONNECTED} from '../constants';
 
-const socketURL = '/';
+const socketURL = 'https://quick-chat-app.herokuapp.com';
 
 class Layout extends Component {
 	constructor(props) {
