@@ -1,17 +1,33 @@
 import React, { Component } from 'react';
+import '../css/login.css';
 
 
 class Login extends Component {
+
+    constructor(props){
+        super(props);
+
+        this.state = {
+            nickname:"",
+            error:""
+        };
+    }
+
+
+
     render() {
+        const {nickname, error} = this.state;
         return (
-            <div>
-                <form onSubmit={this.handleSubmit} className="login-form">
-                
-                    <label htmlFor="nickname">
-                        <h2>Nickname? </h2>
-                    </label>
-                
-                </form>
+            <div className="container">
+                <div id="form-login">
+                    <form onSubmit={this.handleSubmit} className="login-form col-md-4 col-md-offset-4 centered" >
+                        <div className="form-group">
+                                <label htmlFor="nickname">Nickname</label>
+                                <input type="text" name="nickname" className="form-control" placeholder="Enter a username" />
+                                <div className="error">{error ? error:null}</div>
+                        </div>
+                    </form>
+                </div>
             </div>
         );
     }
