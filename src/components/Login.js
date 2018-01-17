@@ -13,6 +13,10 @@ class Login extends Component {
         };
     }
 
+    handleSubmit = (e) => {
+        e.preventDefault();
+    }
+
 
 
     render() {
@@ -20,7 +24,7 @@ class Login extends Component {
         return (
             <div className="container">
                 <div id="form-login">
-                    <form onSubmit={this.handleSubmit} className="login-form col-md-4 col-md-offset-4 centered" >
+                    <form onSubmit={this.handleSubmit} className="login-form col-md-4 col-md-offset-4 centered" id="form-login" >
                         <div className="form-group">
                                 <label htmlFor="nickname">Nickname</label>
                                 <input type="text" name="nickname" className="form-control" placeholder="Enter a username" />
