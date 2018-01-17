@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-
+const { ADD_USER, BAD_NAME } = require('../constants');
 
 //declare port number
 const PORT = process.env.PORT || 3001
@@ -13,7 +13,20 @@ const server = app.listen(PORT, function(){
 //Initialize Socket IO
 const io = module.exports.io = require('socket.io').listen(server);
 
-//Set up initial connection
+let connectedUsers = {};
+
+
+//Set up initial connection and handle connections
 io.on('connection', function(socket) {
     console.log('Connected to sockets ' + socket.id);
+
+
+
+    socket.on(ADD_USER, (name) => {
+        if (connectedUsers[name] === null){
+            connectedUsers[name] = name;
+        }else{
+            socket.emit(BAD_NAME);
+        }
+    });
 });

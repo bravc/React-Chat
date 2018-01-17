@@ -31,10 +31,6 @@ class Layout extends Component {
 		this.setState({socket});
 	}
 
-	setUser = (user) => {
-		const {socket} = this.state;
-		socket.emit(USER_CONNECTED, user);
-	}
 	
 	
 	render() {

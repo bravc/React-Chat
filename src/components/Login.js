@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import '../css/login.css';
-import {ADD_USER} from '../constants';
 
 
 class Login extends Component {
@@ -9,23 +8,23 @@ class Login extends Component {
         super(props);
 
         this.state = {
-            nickname:"",
+            username:"",
             error:""
         };
     }
 
+
+
     handleSubmit = (e) => {
         e.preventDefault();
-
-        const {socket} = this.props;
         const { username } = this.state;
-        socket.emit(ADD_USER, username, this.addUser);
     }
+    
 
 
 
     render() {
-        const {nickname, error} = this.state;
+        const {username, error} = this.state;
         return (
             <div className="container">
                 <div id="form-login">
