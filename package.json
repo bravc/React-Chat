@@ -11,7 +11,7 @@
     "socket.io": "^2.0.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "node src/server/index.js",
     "backend": "nodemon src/server/index.js",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
