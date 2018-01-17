@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import '../css/login.css';
+import {ADD_USER} from '../constants';
 
 
 class Login extends Component {
@@ -15,6 +16,10 @@ class Login extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
+
+        const {socket} = this.props;
+        const { username } = this.state;
+        socket.emit(ADD_USER, username, this.addUser);
     }
 
 
@@ -26,8 +31,8 @@ class Login extends Component {
                 <div id="form-login">
                     <form onSubmit={this.handleSubmit} className="login-form col-md-4 col-md-offset-4" id="form-login" >
                         <div className="form-group rounded">
-                                <label htmlFor="nickname">Nickname</label>
-                                <input type="text" name="nickname" className="form-control" placeholder="Enter a username" />
+                                <label htmlFor="username"></label>
+                                <input type="text" name="username" className="form-control" placeholder="Enter a username" />
                                 <div className="error">{error ? error:null}</div>
                         </div>
                     </form>

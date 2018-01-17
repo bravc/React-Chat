@@ -31,8 +31,9 @@ class Layout extends Component {
 	
 	
 	render() {
+		const {socket} = this.state;
 		return (
-			<Login />
+			<Login socket={socket}/>
 		);
 	}
 }
