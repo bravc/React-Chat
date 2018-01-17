@@ -16,9 +16,11 @@ const io = module.exports.io = require('socket.io').listen(server);
 let connectedUsers = {};
 
 
+app.use( express.static(__dirname + '/../../build'));
+
 //Set up initial connection and handle connections
 io.on('connection', function(socket) {
-    console.log('Connected to sockets ' + socket.id);
+    console.log('Connected to socket ' + socket.id);
 
 
 
