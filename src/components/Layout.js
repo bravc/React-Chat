@@ -6,7 +6,7 @@ import '../css/index.css';
 import Login from './Login';
 import {USER_CONNECTED} from '../constants';
 
-const socketURL = '/';
+import { socketUrl } from '../config';
 
 class Layout extends Component {
 	constructor(props) {
@@ -24,7 +24,7 @@ class Layout extends Component {
 	}
 	
 	initSocket = ()=> {
-		const socket = io(socketURL);
+		const socket = io(socketUrl);
 		socket.on('connect', ()=> {
 			console.log("Connected to socket");
 		})
