@@ -3,8 +3,6 @@ import io from 'socket.io-client';
 
 import '../css/index.css';
 
-
-
 import Login from './Login';
 
 const socketURL = 'http://localhost:3001';
