@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const server = require('http').Server(app);
-const io = module.exports.io = require('socket.io')(server);
+const io = module.exports.io = require('socket.io')(server, {origins: 'https://chat.braverthanman.com:* https://quick-chat-app.herokuapp.com:* http://localhost:*'});
 const { ADD_USER, BAD_NAME } = require('../constants');
 
 //declare port number
