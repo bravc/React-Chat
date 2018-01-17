@@ -4,6 +4,7 @@ import io from 'socket.io-client';
 import '../css/index.css';
 
 import Login from './Login';
+import {USER_CONNECTED} from '../constants';
 
 const socketURL = 'http://localhost:3001';
 
@@ -12,7 +13,8 @@ class Layout extends Component {
 		super(props);
 		
 		this.state = {
-			socket: null
+			socket: null,
+			user: null
 		};
 	}
 	
@@ -27,6 +29,11 @@ class Layout extends Component {
 			console.log("Connected to socket");
 		})
 		this.setState({socket});
+	}
+
+	setUser = (user) => {
+		const {socket} = this.state;
+		socket.emit(USER_CONNECTED, user);
 	}
 	
 	
