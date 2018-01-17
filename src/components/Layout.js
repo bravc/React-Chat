@@ -6,7 +6,7 @@ import '../css/index.css';
 import Login from './Login';
 import {USER_CONNECTED} from '../constants';
 
-const socketURL = 'http://localhost:3001';
+const socketURL = '/';
 
 class Layout extends Component {
 	constructor(props) {
