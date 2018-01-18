@@ -17,6 +17,7 @@ class Login extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
+
         console.log(e.target.value);
     }
     
@@ -28,10 +29,10 @@ class Login extends Component {
                     <div className="card card-container">
                         <h2 className='login_title text-center'>Login</h2>
                     
-                            <form className="form-signin">
+                            <form onSubmit={this.handleSubmit} className="form-signin">
                                 <span id="reauth-email" className="reauth-email"></span>
                                 <p className="input_title">Username</p>
-                                <input type="text" id="inputEmail" className="login_box" placeholder="ex: coolUserNme" required autoFocus></input>
+                                <input type="text" id="username" className="login_box" placeholder="ex: coolUserNme" required autoFocus></input>
                                 <button className="btn btn-lg btn-primary" type="submit">Login</button>
                             </form>
                     </div>
