@@ -17,25 +17,24 @@ class Login extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        const { username } = this.state;
+        console.log(e.target.value);
     }
     
-
-
-
     render() {
         const {username, error} = this.state;
         return (
             <div className="container">
-                <div id="form-login">
-                    <form onSubmit={this.handleSubmit} className="login-form col-md-4 col-md-offset-4" id="form-login" >
-                        <div className="form-group rounded">
-                                <label htmlFor="username"></label>
-                                <input type="text" name="username" className="form-control" placeholder="Enter a username" />
-                                <div className="error">{error ? error:null}</div>
-                        </div>
-                    </form>
-                </div>
+                <h1 className="welcome text-center">Welcome to Hell </h1>
+                    <div className="card card-container">
+                        <h2 className='login_title text-center'>Login</h2>
+                    
+                            <form className="form-signin">
+                                <span id="reauth-email" className="reauth-email"></span>
+                                <p className="input_title">Username</p>
+                                <input type="text" id="inputEmail" className="login_box" placeholder="ex: coolUserNme" required autoFocus></input>
+                                <button className="btn btn-lg btn-primary" type="submit">Login</button>
+                            </form>
+                    </div>
             </div>
         );
     }
