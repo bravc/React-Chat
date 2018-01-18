@@ -15,16 +15,16 @@ app.use( express.static(__dirname + '/../../build'));
 //Set up initial connection and handle connections
 io.on('connection', function(socket) {
     console.log('Connected to socket ' + socket.id);
-    socket.on(ADD_USER, (name) => {
-        if (connectedUsers[name] === null){
-            connectedUsers[name] = name;
-        }else{
-            socket.emit(BAD_NAME);
-        }
-    });
+
+});
+
+app.post('/login', function(req, res){
+    console.log(req.params);
+    res.redirect("/");
 });
 
 //start server on PORT
 server.listen(PORT, function(){
     console.log('Connected to port ' + PORT + '...');
 });
+
