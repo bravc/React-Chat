@@ -25,7 +25,7 @@ class MainChat extends Component {
         this.setState({stream: stream});
       })
       .catch((err) => {
-        this.setState({err: 'No devices found'});
+        this.setState({error: 'No devices found!'});
         console.log(err);
       })
   }
