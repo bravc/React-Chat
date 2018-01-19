@@ -6,11 +6,18 @@ body, html {
 
 }
 
+.error{
+    text-align:center;
+    margin:5px 0;
+    padding:0px 5px;
+    color:#c92c43
+}
+
 .login_box{
     background:#f7f7f7;
     border:3px solid #F4F4F4;
     padding-left: 15px;
-    margin-bottom:25px;
+    margin-bottom:10px;
     }
 .input_title{
     color:rgba(164, 164, 164, 0.9);

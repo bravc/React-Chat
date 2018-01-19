@@ -21,9 +21,9 @@ io.on('connection', function(socket) {
 
     socket.on(USER_CONNECTED, function(username, callback){
         if(username in connectedUsers){
-            callback({isUser: true, user:null});
+            callback({nameTaken: true, user:null});
         }else{
-            callback({isUser: false, user:createUser({name: username})});
+            callback({nameTaken: false, user:createUser({name: username})});
         }
     });
 
@@ -55,6 +55,15 @@ function addUser(userList, user){
 	let newList = Object.assign({}, userList);
 	newList[user.name] = user;
 	return newList;
+}
+
+function userExists(userList, user){
+    Object.keys(userList).forEach(function(loggedUser){
+        if(loggedUser.name.equals(user.name)){
+            return true;
+        }
+    });
+    return false;
 }
 
 
