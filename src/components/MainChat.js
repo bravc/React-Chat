@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
-class App extends Component {
+
+class MainChat extends Component {
   render() {
     return (
       <div> You in spibba! </div>
@@ -8,4 +9,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default MainChat;

@@ -19,7 +19,7 @@ class Layout extends Component {
 		};
 	}
 	
-	
+	//init socket when comp mounts
 	componentWillMount() {
 		this.initSocket();
 	}
