@@ -2,7 +2,10 @@ const express = require('express');
 const app = express();
 const server = require('http').Server(app);
 const io = module.exports.io = require('socket.io')(server, {origins: 'https://chat.braverthanman.com:* https://quick-chat-app.herokuapp.com:* http://localhost:*'});
-const { ADD_USER, BAD_NAME } = require('../constants');
+const { ADD_USER, BAD_NAME, USER_CONNECTED } = require('../constants');
+
+const { createUser } = require('../factories');
+
 
 //declare port number
 const PORT = process.env.PORT || 3001
@@ -16,6 +19,23 @@ app.use( express.static(__dirname + '/../../build'));
 io.on('connection', function(socket) {
     console.log('Connected to socket ' + socket.id);
 
+    socket.on(USER_CONNECTED, function(username, callback){
+        if(username in connectedUsers){
+            callback({isUser: true, user:null});
+        }else{
+            callback({isUser: false, user:createUser({name: username})});
+        }
+    });
+
+
+    socket.on(ADD_USER, function(user){
+        connectedUsers = addUser(connectedUsers, user);
+        socket.user = user
+
+        console.log(connectedUsers);
+
+    });
+
 });
 
 app.post('/login', function(req, res){
@@ -27,4 +47,14 @@ app.post('/login', function(req, res){
 server.listen(PORT, function(){
     console.log('Connected to port ' + PORT + '...');
 });
+
+
+
+//helper function to add new users
+function addUser(userList, user){
+	let newList = Object.assign({}, userList);
+	newList[user.name] = user;
+	return newList;
+}
+
 

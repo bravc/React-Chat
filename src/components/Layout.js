@@ -4,8 +4,9 @@ import io from 'socket.io-client';
 import '../css/index.css';
 
 import Login from './Login';
-import {USER_CONNECTED} from '../constants';
+import MainChat from './MainChat';
 
+import {ADD_USER} from '../constants';
 import { socketUrl } from '../config';
 
 class Layout extends Component {
@@ -31,12 +32,21 @@ class Layout extends Component {
 		this.setState({socket});
 	}
 
+	setUser = (user) => {
+		const { socket } = this.state;
+		socket.emit(ADD_USER, user);
+		this.setState({user: user});
+	}
+
 	
 	
 	render() {
-		const {socket} = this.state;
+		const {socket, user} = this.state;
 		return (
-			<Login socket={socket}/>
+			user ?
+			<MainChat socket={socket} user={user} />
+			:
+			<Login socket={socket} setUser={this.setUser}/>
 		);
 	}
 }
