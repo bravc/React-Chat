@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import io from 'socket.io-client';
 
-import '../css/index.css';
 
 import Login from './Login';
 import MainChat from './MainChat';

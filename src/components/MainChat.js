@@ -9,7 +9,8 @@ class MainChat extends Component {
 
     this.state = {
       stream: null,
-      error: ""
+      error: "",
+      playing: false
     };
 }
 
@@ -30,17 +31,51 @@ class MainChat extends Component {
       })
   }
 
+  videoOn = () => {
+    const { stream, playing } = this.state;
+    const { video, on, card } = this.refs;
+
+
+    if(playing){
+        video.pause();
+        stream.getTracks()[0].stop();
+        video.stop;
+        video.srcObject = null;
+    
+        on.disabled = false;
+
+        this.setState({playing: false})
+
+
+    }else{
+        video.srcObject = stream;
+
+        card.setAttribute('width', video.videoWidth);
+        card.setAttribute('height', video.videoHeight);
+        card.setAttribute('width', video.videoWidth);
+        card.setAttribute('height', video.videoHeight);
+        video.play();
+
+        this.setState({playing: true})
+
+    }
+  }
+
 
 
   render() {
-    const { stream, error } = this.state;
+    const { error } = this.state;
     return (
 
       <div className="container">
-        <div className="card card-container">
+        <div className="card card-container" id="video" ref="card">
         
-          <video id={stream}></video>
+          <video ref="video">Waiting for video....</video>
+          <div className="col-mid-4">
+                <button className="btn btn-lg btn-primary" id="vid-btn" ref="on" onClick={this.videoOn}> Turn on Camera </button>
+            </div>
           <div className="error">{error}</div>
+
         </div>
       </div>
       
