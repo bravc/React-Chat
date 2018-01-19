@@ -52,8 +52,6 @@ class MainChat extends Component {
 
         card.setAttribute('width', video.videoWidth);
         card.setAttribute('height', video.videoHeight);
-        card.setAttribute('width', video.videoWidth);
-        card.setAttribute('height', video.videoHeight);
         video.play();
 
         this.setState({playing: true})

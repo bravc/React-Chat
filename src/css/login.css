@@ -4,18 +4,6 @@ body, html {
     background-color: rgb(4, 40, 68) !important;
 }
 
-#vid-btn {
-    font-weight: 700;
-    height: 36px;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    user-select: none;
-    cursor: default;
-    border-radius:0;
-    background:#43A6EB;
-    height: 55px;
-    margin-bottom:10px;
-}
 
 .error{
     text-align:center;
