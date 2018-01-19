@@ -44,7 +44,7 @@ class Login extends Component {
 
 
     render() {
-        const {username, error} = this.state;
+        const {error} = this.state;
         return (
             <div className="container">
                 <h1 className="welcome text-center">Welcome to Hell </h1>
