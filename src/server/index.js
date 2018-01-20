@@ -38,28 +38,26 @@ io.on('connection', function(socket) {
     });
 
     socket.on(ROOM_CONNECT, function(usertoConnect, currentUser, callback){
-        console.log("Request for " + currentUser + " to join " + usertoConnect);
-        if(!usertoConnect in connectedUsers){
-            callback({userExists: false, user:null});
-        }else{
+        console.log("Request for " + currentUser.name + " to join " + usertoConnect);
+        console.log(usertoConnect in connectedUsers);
+        
+        if(usertoConnect in connectedUsers){
             console.log("Now connected " + currentUser + " to " + usertoConnect);
             socket.join(usertoConnect + currentUser);
             callback({userExists: true, user:currentUser, roomID: usertoConnect + currentUser });
+        }else{
+            callback({userExists: false, user:null, roomID: null});
         }
     });
 
-    socket.on(SEND_SOURCE, function(stream, callback){
-        console.log(stream);
+    socket.on(SEND_SOURCE, function(stream, roomID){
+        console.log("Source being sent " + stream);
         
-        callback({stream: stream});
+        socket.broadcast.emit(SEND_SOURCE, stream);
     });
 
 });
 
-app.post('/login', function(req, res){
-    console.log(req.params);
-    res.redirect("/");
-});
 
 //start server on PORT
 server.listen(PORT, function(){

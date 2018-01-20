@@ -17,6 +17,13 @@ class MainChat extends Component {
       connectUser: "",
       userList: null
     };
+
+    this.props.socket.on(SEND_SOURCE, (stream) => {
+        console.log("Got new stream");
+        
+        this.newStream(stream);
+    });
+
 }
 
 
@@ -64,19 +71,19 @@ class MainChat extends Component {
     newRoom = (userExists, user, roomID) => {
         const { socket } = this.props;
         const { stream } = this.state;
-        if(!userExists){
-            this.setState({error: "User does not exist!"});
+        if(userExists){
+            socket.emit(SEND_SOURCE, window.URL.createObjectURL(stream), roomID)
         }else{
-            socket.emit(SEND_SOURCE, window.URL.createObjectURL(stream), this.newStream)
+            this.setState({error: "User does not exist!"});
         }
     }
 
     newStream = (stream) => {
+        const { socket } = this.props;
         const { connectedVideo } = this.refs;
-        console.log(stream);
-        
 
-        connectedVideo.src = stream.stream;
+        console.log("Stream got to here " + stream);
+        connectedVideo.src = stream;
         connectedVideo.play();
     }
 
