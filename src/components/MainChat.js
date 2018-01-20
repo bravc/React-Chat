@@ -10,8 +10,9 @@ class MainChat extends Component {
 
     this.state = {
       stream: null,
-      error: "",
+      error: [],
       playing: false,
+      connectUser: ""
     };
 }
 
@@ -53,7 +54,18 @@ class MainChat extends Component {
     }
   }
 
+    onSubmit = (e) => {
+        const { connectUser } = this.state;
+    
+        console.log(connectUser);
 
+        e.preventDefault();
+    }
+
+    //Updates state as name is typed
+    handleChange = (e) => {
+        this.setState({connectUser: e.target.value});
+    }
 
 
 
@@ -63,16 +75,11 @@ class MainChat extends Component {
   render() {
     const { error, stream } = this.state;
     const { socket } = this.props;
-
- 
-
-
     return (
-
-        <div className="container">
+        <div className="container-fluid">
             <div className="row">
                 <div className="page">
-                    <div className="col-mid-3">
+                    <div className="col-mid">
                         <div className="card">
     
                             <video className="card-img-top" ref="video">Heyyyyy</video>
@@ -86,14 +93,14 @@ class MainChat extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="col-mid-3">
-                        <ActiveUsers socket={socket} />
-                    </div>
-
-                    <div className="col-mid-6">
-                        <form className="form-group">
-                            <input className="form-control" type="text" placeholder="Enter a user to chat with"/>
-                        </form>
+                    <div className="col-mid">
+                        <div className="card">
+                            <form className="form-group"  onSubmit={this.onSubmit}  id="form-chat">
+                                <input className="form-control" ref="connectUser" onChange={this.handleChange} type="text" placeholder="Enter a user to chat with"/>
+                                <div className="error">{error}</div>
+                                <button className="btn btn-lg btn-primary" id="vid-btn" type="submit">Lets Chat!</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
