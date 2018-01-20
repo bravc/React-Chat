@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ActiveUsers from './ActiveUsers';
+import {ROOM_CONNECT} from '../constants';
 
 import '../css/chat.css';
 
@@ -12,7 +13,8 @@ class MainChat extends Component {
       stream: null,
       error: [],
       playing: false,
-      connectUser: ""
+      connectUser: "",
+      userList: null
     };
 }
 
@@ -20,7 +22,8 @@ class MainChat extends Component {
 
   //get video stream
   getVideo = () => {
-    navigator.mediaDevices.getUserMedia({video: true, audio: false})
+    const { video } = this.refs;
+    navigator.mediaDevices.getUserMedia({video: { width: 100, height: 75 }, audio: false})
       .then((stream) => {
         console.log('Got it');
         this.setState({stream: stream});
@@ -35,7 +38,6 @@ class MainChat extends Component {
 
 
   videoOn = () => {
-    this.getVideo();
     const { stream, playing } = this.state;
     const { video, on, card } = this.refs;
 
@@ -44,7 +46,7 @@ class MainChat extends Component {
         video.pause();
         video.stop;
         video.srcObject = null;
-        stream.getTracks()[0].stop();
+        // stream.getTracks()[0].stop();
         this.setState({playing: false})
 
     }else{
@@ -54,10 +56,21 @@ class MainChat extends Component {
     }
   }
 
+    newRoom = () => {
+
+
+    }
+
     onSubmit = (e) => {
         const { connectUser } = this.state;
+        const { socket } = this.props;
     
         console.log(connectUser);
+
+        socket.emit(ROOM_CONNECT, connectUser, this.props.user, this.newRoom );
+
+
+
 
         e.preventDefault();
     }
@@ -76,24 +89,22 @@ class MainChat extends Component {
     const { error, stream } = this.state;
     const { socket } = this.props;
     return (
-        <div className="container-fluid">
-            <div className="row">
-                <div className="page">
-                    <div className="col-mid">
+        <div className="container">
+            <div className="row page">
+                    <div className="col">
                         <div className="card">
-    
+
                             <video className="card-img-top" ref="video">Heyyyyy</video>
                 
                             <div className="card-block">
                                 <p className="card-text">Make youself look pretty</p>
-                                <button className="btn btn-lg btn-primary" id="vid-btn" ref="on" onClick={this.videoOn}> Turn on Camera </button>
+                                <button className="btn btn-lg btn-primary" id="vid-btn" ref="on" onClick={this.videoOn}> Show Camera </button>
+                                <button className="btn btn-lg btn-primary" id="vid-btn" onClick={this.getVideo}> Turn on Camera </button>
                                 <div className="error">{error}</div>
-
-
                             </div>
                         </div>
                     </div>
-                    <div className="col-mid">
+                    <div className="col">
                         <div className="card">
                             <form className="form-group"  onSubmit={this.onSubmit}  id="form-chat">
                                 <input className="form-control" ref="connectUser" onChange={this.handleChange} type="text" placeholder="Enter a user to chat with"/>
@@ -102,8 +113,15 @@ class MainChat extends Component {
                             </form>
                         </div>
                     </div>
-                </div>
             </div>
+
+            <div className="row">
+                <div className="col">
+                    <div className="card">
+                        <video className="card-img-top" ref="connectedVideo">Heyyyyy</video>
+                    </div>
+                </div>
+             </div>
         </div>
 
         
