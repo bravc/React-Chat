@@ -38,6 +38,7 @@ io.on('connection', function(socket) {
     });
 
     socket.on(ROOM_CONNECT, function(usertoConnect, currentUser, callback){
+        console.log("Request for " + currentUser + " to join " + usertoConnect);
         if(!usertoConnect in connectedUsers){
             callback({userExists: false, user:null});
         }else{
