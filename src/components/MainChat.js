@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import ActiveUsers from './ActiveUsers';
-import {ROOM_CONNECT} from '../constants';
+import {ROOM_CONNECT, SEND_SOURCE} from '../constants';
 
 import '../css/chat.css';
+import { connect } from 'tls';
 
 class MainChat extends Component {
 
@@ -35,6 +36,10 @@ class MainChat extends Component {
       })
   }
 
+  componentWillMount = () => {
+      this.getVideo();
+  }
+
 
 
   videoOn = () => {
@@ -56,9 +61,23 @@ class MainChat extends Component {
     }
   }
 
-    newRoom = () => {
+    newRoom = (userExists, user, roomID) => {
+        const { socket } = this.props;
+        const { stream } = this.state;
+        if(!userExists){
+            this.setState({error: "User does not exist!"});
+        }else{
+            socket.emit(SEND_SOURCE, window.URL.createObjectURL(stream), this.newStream)
+        }
+    }
 
+    newStream = (stream) => {
+        const { connectedVideo } = this.refs;
+        console.log(stream);
+        
 
+        connectedVideo.src = stream.stream;
+        connectedVideo.play();
     }
 
     onSubmit = (e) => {
@@ -68,9 +87,6 @@ class MainChat extends Component {
         console.log(connectUser);
 
         socket.emit(ROOM_CONNECT, connectUser, this.props.user, this.newRoom );
-
-
-
 
         e.preventDefault();
     }
@@ -99,7 +115,6 @@ class MainChat extends Component {
                             <div className="card-block">
                                 <p className="card-text">Make youself look pretty</p>
                                 <button className="btn btn-lg btn-primary" id="vid-btn" ref="on" onClick={this.videoOn}> Show Camera </button>
-                                <button className="btn btn-lg btn-primary" id="vid-btn" onClick={this.getVideo}> Turn on Camera </button>
                                 <div className="error">{error}</div>
                             </div>
                         </div>

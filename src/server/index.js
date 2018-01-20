@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const server = require('http').Server(app);
 const io = module.exports.io = require('socket.io')(server, {origins: 'https://chat.braverthanman.com:* https://quick-chat-app.herokuapp.com:* http://localhost:*'});
-const { ADD_USER, BAD_NAME, USER_CONNECTED } = require('../constants');
+const { ADD_USER, BAD_NAME, USER_CONNECTED, ROOM_CONNECT, SEND_SOURCE } = require('../constants');
 
 const { createUser } = require('../factories');
 
@@ -35,6 +35,22 @@ io.on('connection', function(socket) {
         console.log(connectedUsers);
         socket.broadcast.emit(ADD_USER, connectedUsers);
 
+    });
+
+    socket.on(ROOM_CONNECT, function(usertoConnect, currentUser, callback){
+        if(!usertoConnect in connectedUsers){
+            callback({userExists: false, user:null});
+        }else{
+            console.log("Now connected " + currentUser + " to " + usertoConnect);
+            socket.join(usertoConnect + currentUser);
+            callback({userExists: true, user:currentUser, roomID: usertoConnect + currentUser });
+        }
+    });
+
+    socket.on(SEND_SOURCE, function(stream, callback){
+        console.log(stream);
+        
+        callback({stream: stream});
     });
 
 });
