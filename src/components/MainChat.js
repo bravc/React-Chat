@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 
-import '../css/login.css';
+const { ADD_USER } = require('../constants');
+
+// import '../css/login.css';
 
 class MainChat extends Component {
 
@@ -10,17 +12,19 @@ class MainChat extends Component {
     this.state = {
       stream: null,
       error: "",
-      playing: false
+      playing: false,
+      users: []
     };
 }
 
   componentWillMount() {
-		this.getVideo();
+        this.getVideo();
+        this.getUsers();
 	}
 
   //get video stream
   getVideo = () => {
-    navigator.mediaDevices.getUserMedia({video: true, audio: true})
+    navigator.mediaDevices.getUserMedia({video: true, audio: false})
       .then((stream) => {
         console.log('Got it');
         this.setState({stream: stream});
@@ -31,19 +35,30 @@ class MainChat extends Component {
       })
   }
 
+  getUsers = () => {
+      const { socket } = this.props;
+      const { userList } = this.refs;
+
+      socket.on(ADD_USER, (user) => {
+          let { users } = this.state;
+          users.push(user);
+          this.setState({users: users});
+      });
+  }
+
   videoOn = () => {
+    this.getVideo();
     const { stream, playing } = this.state;
     const { video, on, card } = this.refs;
 
 
     if(playing){
         video.pause();
-        stream.getTracks()[0].stop();
         video.stop;
         video.srcObject = null;
-    
-        on.disabled = false;
+        stream.getTracks()[0].stop();
 
+    
         this.setState({playing: false})
 
 
@@ -52,28 +67,50 @@ class MainChat extends Component {
 
         card.setAttribute('width', video.videoWidth);
         card.setAttribute('height', video.videoHeight);
+      
         video.play();
 
         this.setState({playing: true})
-
     }
   }
 
 
 
+
+
   render() {
     const { error } = this.state;
+
     return (
 
       <div className="container">
-        <div className="card card-container" id="video" ref="card">
-        
-          <video ref="video">Waiting for video....</video>
-          <div className="col-mid-4">
-                <button className="btn btn-lg btn-primary" id="vid-btn" ref="on" onClick={this.videoOn}> Turn on Camera </button>
+        <div className="row">
+            <div className="col-mid">
+                <div className="card card-container" id="video" ref="card">
+                <video ref="video" id="vid-screen" >Waiting for video....</video>
+                    <button className="btn btn-lg btn-primary" id="vid-btn" ref="on" onClick={this.videoOn}> Turn on Camera </button>
+                <div className="error">{error}</div>
+                </div>
             </div>
-          <div className="error">{error}</div>
 
+
+            <div className="col-mid">
+                <div className="card card-container"> 
+                    <video ref="peerVideo" id="vid-screen" >Waiting for video....</video>
+                    <div className="error">{error}</div>
+                </div>
+            </div>
+
+            <div className="col-mid">
+                <div> 
+                  <ul className="list-group" ref="userList">  
+                    {this.state.users.map(function(user){
+                        return (<li className="list-group-item">{user.name}</li>)
+                    })}
+
+                  </ul>
+                </div>
+            </div>
         </div>
       </div>
       

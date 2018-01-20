@@ -33,6 +33,7 @@ io.on('connection', function(socket) {
         socket.user = user
 
         console.log(connectedUsers);
+        socket.emit(ADD_USER, user);
 
     });
 

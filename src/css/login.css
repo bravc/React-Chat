@@ -5,6 +5,20 @@ body, html {
 }
 
 
+#vid-btn {
+    width: 100%;
+}
+
+#vid-screen {
+    max-height: 200px;
+    max-height: 200px;
+    text-align: center;
+    padding-left: 20px;
+    padding-top: 10px;
+
+
+}
+
 .error{
     text-align:center;
     margin:5px 0;
@@ -46,7 +60,8 @@ hr{
 }
 
 .card-container.card {
-    max-width: 350px;
+    /* max-width: 350px; */
+    width: 350px;
     margin-top: 15%;
 
 }
