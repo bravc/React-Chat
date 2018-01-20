@@ -72,7 +72,7 @@ class MainChat extends Component {
         const { socket } = this.props;
         const { stream } = this.state;
         if(userExists){
-            socket.emit(SEND_SOURCE, window.URL.createObjectURL(stream), roomID)
+            socket.emit(SEND_SOURCE, stream, roomID);
         }else{
             this.setState({error: "User does not exist!"});
         }
@@ -83,7 +83,9 @@ class MainChat extends Component {
         const { connectedVideo } = this.refs;
 
         console.log("Stream got to here " + stream);
-        connectedVideo.src = stream;
+        console.log(stream);
+        
+        connectedVideo.srcObject = stream;
         connectedVideo.play();
     }
 

@@ -19,6 +19,8 @@ app.use( express.static(__dirname + '/../../build'));
 io.on('connection', function(socket) {
     console.log('Connected to socket ' + socket.id);
 
+
+    //Checks if username is taken before adding user to lobby
     socket.on(USER_CONNECTED, function(username, callback){
         if(username in connectedUsers){
             callback({nameTaken: true, user:null});
@@ -28,6 +30,8 @@ io.on('connection', function(socket) {
     });
 
 
+
+    //Adds a user to the lobby
     socket.on(ADD_USER, function(user){
         connectedUsers = addUser(connectedUsers, user);
         socket.user = user
@@ -37,6 +41,7 @@ io.on('connection', function(socket) {
 
     });
 
+    //Connects two users to a room 
     socket.on(ROOM_CONNECT, function(usertoConnect, currentUser, callback){
         console.log("Request for " + currentUser.name + " to join " + usertoConnect);
         console.log(usertoConnect in connectedUsers);
@@ -50,6 +55,7 @@ io.on('connection', function(socket) {
         }
     });
 
+    //Sends the media source to the socket
     socket.on(SEND_SOURCE, function(stream, roomID){
         console.log("Source being sent " + stream);
         
