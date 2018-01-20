@@ -69,7 +69,7 @@ class MainChat extends Component {
         <div className="container">
             <div className="row">
                 <div className="col-mid">
-                        <ActiveUsers socket={socket}/>
+                    <ActiveUsers socket={socket}/>
                 </div>
                 <div className="col-mid">
                     <div className="card card-container" id="video" ref="card">
@@ -81,8 +81,7 @@ class MainChat extends Component {
             </div>
         </div>
 
- 
-
+        
     );
   }
 }

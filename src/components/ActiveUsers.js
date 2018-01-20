@@ -23,6 +23,11 @@ class ActiveUsers extends Component {
 
 
 
+// (<li className="list-group-item" key={i}> user</li>)
+
+
+
+
   render() {
     const { users } = this.state;
     return (
@@ -31,7 +36,7 @@ class ActiveUsers extends Component {
           {Object.keys(users).forEach(function(user, i){
             console.log(user);
             
-            return <li className="list-group-item" key={i}> user</li>
+          return (<li> hu </li>);
           })}
         </ul>
       </div>
