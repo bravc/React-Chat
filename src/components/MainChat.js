@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import ActiveUsers from './ActiveUsers';
-import NavBar from './NavBar';
 
-import '../css/login.css';
+import '../css/chat.css';
 
 class MainChat extends Component {
 
@@ -27,6 +26,7 @@ class MainChat extends Component {
       })
       .catch((err) => {
         this.setState({error: 'No devices found!'});
+        this.refs.on.disabled = true;
         console.log(err);
       })
   }
@@ -48,8 +48,6 @@ class MainChat extends Component {
 
     }else{
         video.srcObject = stream;
-        card.setAttribute('width', video.videoWidth);
-        card.setAttribute('height', video.videoHeight);
         video.play();
         this.setState({playing: true})
     }
@@ -59,23 +57,43 @@ class MainChat extends Component {
 
 
 
+
+
+
   render() {
-    const { error } = this.state;
-    const { users } = this.state;
+    const { error, stream } = this.state;
     const { socket } = this.props;
+
+ 
 
 
     return (
+
         <div className="container">
             <div className="row">
-                <div className="col-mid">
-                    <ActiveUsers socket={socket}/>
-                </div>
-                <div className="col-mid">
-                    <div className="card card-container" id="video" ref="card">
-                    <video ref="video" id="vid-screen" >Waiting for video....</video>
-                        <button className="btn btn-lg btn-primary" id="vid-btn" ref="on" onClick={this.videoOn}> Turn on Camera </button>
-                    <div className="error">{error}</div>
+                <div className="page">
+                    <div className="col-mid-3">
+                        <div className="card">
+    
+                            <video className="card-img-top" ref="video">Heyyyyy</video>
+                
+                            <div className="card-block">
+                                <p className="card-text">Make youself look pretty</p>
+                                <button className="btn btn-lg btn-primary" id="vid-btn" ref="on" onClick={this.videoOn}> Turn on Camera </button>
+                                <div className="error">{error}</div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-mid-3">
+                        <ActiveUsers socket={socket} />
+                    </div>
+
+                    <div className="col-mid-6">
+                        <form className="form-group">
+                            <input className="form-control" type="text" placeholder="Enter a user to chat with"/>
+                        </form>
                     </div>
                 </div>
             </div>

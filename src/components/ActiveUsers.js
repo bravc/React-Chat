@@ -3,22 +3,38 @@ import React, { Component } from 'react';
 const { ADD_USER } = require('../constants');
 
 
+
+
 class ActiveUsers extends Component {
   constructor(props){
     super(props);
 
     this.state = {
-      users: {}
+      users: {},
+      userList: null
     };
 
     const { socket } = this.props;
 
     socket.on(ADD_USER, (connectedUsers) => {
       this.setState({users: connectedUsers});
+      this.mapUsers();
       console.log("New user!" + connectedUsers);
-      
     });
 }
+
+
+
+  mapUsers = () => {
+    const { users } = this.state;
+    const listUsers = Object.keys(users).forEach((user) => {
+      console.log(user);
+      return <li className="list-group-item" value={user} key={users[user].id}></li>
+    });
+    console.log(listUsers);
+
+    this.setState({userList: listUsers});
+  }
 
 
 
@@ -28,17 +44,14 @@ class ActiveUsers extends Component {
 
 
 
+
   render() {
-    const { users } = this.state;
+    const { users, userList } = this.state;
+
+
     return (
       <div>
-        <ul className="list-group">
-          {Object.keys(users).forEach(function(user, i){
-            console.log(user);
-            
-          return (<li> hu </li>);
-          })}
-        </ul>
+        <ul className="list-group" onChange={this.mapUsers}>{userList} </ul>
       </div>
     );
   }
