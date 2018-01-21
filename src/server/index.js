@@ -3,7 +3,7 @@ const app = express();
 const server = require('http').Server(app);
 const io = module.exports.io = require('socket.io')(server, {origins: 'https://chat.braverthanman.com:* https://quick-chat-app.herokuapp.com:* http://localhost:*'});
 const { ADD_USER, BAD_NAME, USER_CONNECTED, ROOM_CONNECT, SEND_SOURCE } = require('../constants');
-
+const uuidv4 = require('uuid/v4');
 const { createUser } = require('../factories');
 
 
@@ -25,7 +25,7 @@ io.on('connection', function(socket) {
         if(username in connectedUsers){
             callback({nameTaken: true, user:null});
         }else{
-            callback({nameTaken: false, user:createUser({name: username})});
+            callback({nameTaken: false, user:createUser(username, socket.id)});
         }
     });
 
@@ -47,9 +47,12 @@ io.on('connection', function(socket) {
         console.log(usertoConnect in connectedUsers);
         
         if(usertoConnect in connectedUsers){
+            const roomID = uuidv4();
             console.log("Now connected " + currentUser + " to " + usertoConnect);
-            socket.join(usertoConnect + currentUser);
-            callback({userExists: true, user:currentUser, roomID: usertoConnect + currentUser });
+            socket.join(roomID);
+            console.log("User " + socket.id + " joined room " + roomID);                
+            socket.to(connectedUsers[usertoConnect].socketID).emit('ROOM_REQUEST', JSON.stringify(roomID) );
+            callback({userExists: true, user:currentUser, roomID: roomID });
         }else{
             callback({userExists: false, user:null, roomID: null});
         }
@@ -60,6 +63,12 @@ io.on('connection', function(socket) {
         console.log("Source being sent " + stream);
         
         socket.broadcast.emit(SEND_SOURCE, stream);
+    });
+
+
+    socket.on("ACCEPT_ROOM_REQUEST", function(roomID){
+        socket.join(roomID);
+        console.log(socket.id + " joined room " + roomID);        
     });
 
 });

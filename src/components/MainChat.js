@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ActiveUsers from './ActiveUsers';
 import {ROOM_CONNECT, SEND_SOURCE} from '../constants';
-
+import Peer from 'simple-peer';
 import '../css/chat.css';
 import { connect } from 'tls';
 
@@ -15,69 +15,106 @@ class MainChat extends Component {
       error: [],
       playing: false,
       connectUser: "",
-      userList: null
+      peer: null
+
     };
 
-    this.props.socket.on(SEND_SOURCE, (stream) => {
-        console.log("Got new stream");
-        
-        this.newStream(stream);
-    });
+        const { socket } = this.props;
+        //checks for new source
+        socket.on(SEND_SOURCE, (stream) => {
+            console.log("Got new stream");
+            this.newStream(stream);
+        });
 
-}
+        socket.on("ROOM_REQUEST", (roomID) => {
+            socket.emit("ACCEPT_ROOM_REQUEST", JSON.parse(roomID));
+            const peer = new Peer({initiator: false, stream: this.state.stream});
+            this.setState({peer: peer});
+            // peer.signal(this.stream);
 
-
-
-  //get video stream
-  getVideo = () => {
-    const { video } = this.refs;
-    navigator.mediaDevices.getUserMedia({video: { width: 100, height: 75 }, audio: false})
-      .then((stream) => {
-        console.log('Got it');
-        this.setState({stream: stream});
-      })
-      .catch((err) => {
-        this.setState({error: 'No devices found!'});
-        this.refs.on.disabled = true;
-        console.log(err);
-      })
-  }
-
-  componentWillMount = () => {
-      this.getVideo();
-  }
+            console.log("Request Accepted!");
+            
 
 
-
-  videoOn = () => {
-    const { stream, playing } = this.state;
-    const { video, on, card } = this.refs;
-
-
-    if(playing){
-        video.pause();
-        video.stop;
-        video.srcObject = null;
-        // stream.getTracks()[0].stop();
-        this.setState({playing: false})
-
-    }else{
-        video.srcObject = stream;
-        video.play();
-        this.setState({playing: true})
+        });
     }
-  }
 
+    //get video stream
+    getVideo = () => {
+        const { video } = this.refs;
+        const { peer } = this.state;
+        navigator.mediaDevices.getUserMedia({video: { width: 100, height: 75 }, audio: false})
+        .then((stream) => {
+            console.log('Got it');
+            this.setState({stream: stream});
+            if(peer){
+                peer.on('stream', (stream) => {
+                    const { connectedVideo } = this.refs;
+    
+                    console.log("Stream got to here " + stream);
+                    console.log(stream);
+                    
+                    connectedVideo.src = window.URL.createObjectURL(stream);
+                    connectedVideo.play();
+                });
+            }
+        })
+        .catch((err) => {
+            this.setState({error: 'No devices found!'});
+            this.refs.on.disabled = true;
+            console.log(err);
+        })
+    }
+
+    //Grabs the video component from the user
+    componentWillMount = () => {
+        this.getVideo();
+    }
+
+    //Grabs the video component from the user
+    videoOn = () => {
+        const { stream, playing } = this.state;
+        const { video, on, card } = this.refs;
+
+
+        if(playing){
+            video.pause();
+            video.stop;
+            video.srcObject = null;
+            // stream.getTracks()[0].stop();
+            this.setState({playing: false})
+
+        }else{
+            video.srcObject = stream;
+            video.play();
+            this.setState({playing: true})
+        }
+    }
+
+    //Once room is connected, sends source to connected user
     newRoom = (userExists, user, roomID) => {
         const { socket } = this.props;
         const { stream } = this.state;
         if(userExists){
-            socket.emit(SEND_SOURCE, stream, roomID);
+            const peer = new Peer({initiator: true, stream: stream});
+            this.setState({peer: peer});
+            // peer.signal(this.stream);
+            peer.on('stream', (stream) => {
+                const { connectedVideo } = this.refs;
+
+                console.log("Stream got to here " + stream);
+                console.log(stream);
+                
+                connectedVideo.src = window.URL.createObjectURL(stream);
+                connectedVideo.play();
+
+            });
         }else{
             this.setState({error: "User does not exist!"});
         }
     }
 
+    //When you recieve a stream, play it in the window
     newStream = (stream) => {
         const { socket } = this.props;
         const { connectedVideo } = this.refs;
@@ -89,6 +126,7 @@ class MainChat extends Component {
         connectedVideo.play();
     }
 
+    //Submit call to another user
     onSubmit = (e) => {
         const { connectUser } = this.state;
         const { socket } = this.props;
