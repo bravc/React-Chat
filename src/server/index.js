@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const server = require('http').Server(app);
 const io = module.exports.io = require('socket.io')(server, {origins: 'https://chat.braverthanman.com:* https://quick-chat-app.herokuapp.com:* http://localhost:*'});
-const { ADD_USER, BAD_NAME, USER_CONNECTED, ROOM_CONNECT, SEND_SOURCE } = require('../constants');
+const { ADD_USER, BAD_NAME, USER_CONNECTED, ROOM_CONNECT, SEND_PEER } = require('../constants');
 const uuidv4 = require('uuid/v4');
 const { createUser } = require('../factories');
 
@@ -45,32 +45,33 @@ io.on('connection', function(socket) {
     socket.on(ROOM_CONNECT, function(usertoConnect, currentUser, callback){
         console.log("Request for " + currentUser.name + " to join " + usertoConnect);
         console.log(usertoConnect in connectedUsers);
+
+        if(usertoConnect === currentUser.name){
+            callback(false, "That's your name!", null);
+        }
         
         if(usertoConnect in connectedUsers){
             const roomID = uuidv4();
             console.log("Now connected " + currentUser + " to " + usertoConnect);
             socket.join(roomID);
             console.log("User " + socket.id + " joined room " + roomID);                
-            socket.to(connectedUsers[usertoConnect].socketID).emit('ROOM_REQUEST', JSON.stringify(roomID) );
-            callback({userExists: true, user:currentUser, roomID: roomID });
+            socket.to(connectedUsers[usertoConnect].socketID).emit('ROOM_REQUEST', roomID );
+            callback(true, null, roomID);
         }else{
-            callback({userExists: false, user:null, roomID: null});
+            callback(false, "User does not exist!", null);
         }
     });
-
-    //Sends the media source to the socket
-    socket.on(SEND_SOURCE, function(stream, roomID){
-        console.log("Source being sent " + stream);
-        
-        socket.broadcast.emit(SEND_SOURCE, stream);
-    });
-
 
     socket.on("ACCEPT_ROOM_REQUEST", function(roomID){
         socket.join(roomID);
         console.log(socket.id + " joined room " + roomID);        
     });
 
+    socket.on(SEND_PEER, function(data, roomID){
+        console.log("Peer being sent to " + roomID);
+        
+        socket.to(roomID).emit("PEER_SENT", data);
+    });
 });
 
 
