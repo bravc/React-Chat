@@ -1,10 +1,12 @@
 # Basic Chat App in react
+Video chat web app. Featuring private chat rooms
 
 ## Technologies
 * Node.js
 * React.js
 * Socket.io
 * JQuery
+* Simple-Peer.js
 
 
 ### Version
